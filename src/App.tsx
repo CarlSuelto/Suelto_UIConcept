@@ -1,121 +1,153 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import React, { useState } from "react";
+import "./index.css";
 
-function App() {
-  const [count, setCount] = useState(0)
+type Page = "Dashboard" | "Students" | "Logs" | "Reports" | "Progress";
+
+const App: React.FC = () => {
+  const [page, setPage] = useState<Page>("Dashboard");
+  const [collapsed, setCollapsed] = useState(false);
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+    <div className={`app ${collapsed ? "collapsed" : ""}`}>
+      {/* Sidebar */}
+      <aside className="sidebar glass">
+        <div className="sidebar-top">
+          {!collapsed && <h2 className="logo">SIL Monitor</h2>}
+          <button className="collapse-btn" onClick={() => setCollapsed(!collapsed)}>☰</button>
         </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
+
+        <nav className="nav">
+          <NavItem label="Dashboard" icon="📊" active={page==="Dashboard"} onClick={()=>setPage("Dashboard")} collapsed={collapsed}/>
+          <NavItem label="Students" icon="👨‍🎓" active={page==="Students"} onClick={()=>setPage("Students")} collapsed={collapsed}/>
+          <NavItem label="Logs" icon="📝" active={page==="Logs"} onClick={()=>setPage("Logs")} collapsed={collapsed}/>
+          <NavItem label="Reports" icon="📁" active={page==="Reports"} onClick={()=>setPage("Reports")} collapsed={collapsed}/>
+          <NavItem label="Progress" icon="📈" active={page==="Progress"} onClick={()=>setPage("Progress")} collapsed={collapsed}/>
+        </nav>
+      </aside>
+
+      {/* Main */}
+      <main className="main">
+        <header className="header glass">
+          <h1>{page}</h1>
+          <div className="user glass-soft">Admin</div>
+        </header>
+
+        <div className="page">
+          {page === "Dashboard" && <Dashboard />}
+          {page === "Students" && <Students />}
+          {page === "Logs" && <Logs />}
+          {page === "Reports" && <Reports />}
+          {page === "Progress" && <Progress />}
         </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+      </main>
+    </div>
+  );
+};
 
-      <div className="ticks"></div>
+export default App;
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+/* NAV ITEM WITH TOOLTIP */
+const NavItem = ({ label, icon, active, onClick, collapsed }: any) => (
+  <div className="nav-wrapper">
+    <button className={`nav-item ${active ? "active" : ""}`} onClick={onClick}>
+      <span className="icon">{icon}</span>
+      {!collapsed && <span className="label">{label}</span>}
+      {active && <span className="active-indicator" />}
+    </button>
+    {collapsed && <span className="tooltip">{label}</span>}
+  </div>
+);
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
-}
+/* PAGES */
+const Dashboard = () => (
+  <div className="grid">
+    <Card title="Active Students" value="128" />
+    <Card title="Completed Hours" value="4,320" />
+    <Card title="Pending Reports" value="12" />
+  </div>
+);
 
-export default App
+const Students = () => (
+  <div className="section">
+    <h3>Students</h3>
+    <Table
+      headers={["Name", "Hours", "Status"]}
+      rows={[
+        ["Juan Dela Cruz", "120", <Badge type="complete" text="Complete" />],
+        ["Maria Santos", "98", <Badge type="pending" text="Pending" />],
+      ]}
+    />
+  </div>
+);
+
+const Logs = () => (
+  <div className="section">
+    <h3>Logs</h3>
+    <Table
+      headers={["Name", "Hours", "Description"]}
+      rows={[
+        ["Juan", "5", "Worked on UI"],
+        ["Maria", "4", "Documentation"],
+      ]}
+    />
+  </div>
+);
+
+const Reports = () => (
+  <div className="grid">
+    <Card title="Approved Reports" value="90" />
+    <Card title="Rejected Reports" value="5" />
+    <Card title="Pending Review" value="12" />
+  </div>
+);
+
+/* NEW PROGRESS PAGE */
+const Progress = () => {
+  const data = [
+    { name: "Juan Dela Cruz", progress: 70 },
+    { name: "Maria Santos", progress: 55 },
+    { name: "Alex Tan", progress: 40 },
+  ];
+
+  return (
+    <div className="section">
+      <h3>Weekly Progress Tracker</h3>
+      <div className="grid">
+        {data.map((s, i) => (
+          <div key={i} className="progress-card glass">
+            <p>{s.name}</p>
+            <div className="progress-bar">
+              <div className="progress-fill" style={{ width: `${s.progress}%` }} />
+            </div>
+            <Badge type={s.progress > 60 ? "complete" : "pending"} text={`${s.progress}%`} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+/* COMPONENTS */
+const Card = ({ title, value }: any) => (
+  <div className="card glass">
+    <p>{title}</p>
+    <h2>{value}</h2>
+  </div>
+);
+
+const Badge = ({ type, text }: any) => (
+  <span className={`badge ${type}`}>{text}</span>
+);
+
+const Table = ({ headers, rows }: any) => (
+  <div className="table glass">
+    <div className="row header-row">
+      {headers.map((h: string, i: number) => <span key={i}>{h}</span>)}
+    </div>
+    {rows.map((r: any, i: number) => (
+      <div className="row fade-in" key={i}>
+        {r.map((cell: any, j: number) => <span key={j}>{cell}</span>)}
+      </div>
+    ))}
+  </div>
+);
