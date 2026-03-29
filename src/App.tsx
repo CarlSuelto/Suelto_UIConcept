@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./App.css";
 
-type Page = "Dashboard" | "Students" | "Logs" | "Reports" | "Progress";
+type Page = "Dashboard" | "Students" | "Logs" | "Reports" | "Alerts";
 
 const App: React.FC = () => {
   const [page, setPage] = useState<Page>("Dashboard");
@@ -13,7 +13,12 @@ const App: React.FC = () => {
       <aside className="sidebar glass">
         <div className="sidebar-top">
           {!collapsed && <h2 className="logo">SIL Monitor</h2>}
-          <button className="collapse-btn" onClick={() => setCollapsed(!collapsed)}>☰</button>
+          <button
+            className="collapse-btn"
+            onClick={() => setCollapsed(!collapsed)}
+          >
+            ☰
+          </button>
         </div>
 
         <nav className="nav">
@@ -21,7 +26,7 @@ const App: React.FC = () => {
           <NavItem label="Students" icon="👨‍🎓" active={page==="Students"} onClick={()=>setPage("Students")} collapsed={collapsed}/>
           <NavItem label="Logs" icon="📝" active={page==="Logs"} onClick={()=>setPage("Logs")} collapsed={collapsed}/>
           <NavItem label="Reports" icon="📁" active={page==="Reports"} onClick={()=>setPage("Reports")} collapsed={collapsed}/>
-          <NavItem label="Progress" icon="📈" active={page==="Progress"} onClick={()=>setPage("Progress")} collapsed={collapsed}/>
+          <NavItem label="Alerts" icon="🚨" active={page==="Alerts"} onClick={()=>setPage("Alerts")} collapsed={collapsed}/>
         </nav>
       </aside>
 
@@ -37,7 +42,7 @@ const App: React.FC = () => {
           {page === "Students" && <Students />}
           {page === "Logs" && <Logs />}
           {page === "Reports" && <Reports />}
-          {page === "Progress" && <Progress />}
+          {page === "Alerts" && <Alerts />}
         </div>
       </main>
     </div>
@@ -54,6 +59,7 @@ const NavItem = ({ label, icon, active, onClick, collapsed }: any) => (
       {!collapsed && <span className="label">{label}</span>}
       {active && <span className="active-indicator" />}
     </button>
+
     {collapsed && <span className="tooltip">{label}</span>}
   </div>
 );
@@ -101,25 +107,23 @@ const Reports = () => (
   </div>
 );
 
-/* NEW PROGRESS PAGE */
-const Progress = () => {
-  const data = [
-    { name: "Juan Dela Cruz", progress: 70 },
-    { name: "Maria Santos", progress: 55 },
-    { name: "Alex Tan", progress: 40 },
+/* NEW ALERTS PAGE */
+const Alerts = () => {
+  const alertsData = [
+    { student: "Juan Dela Cruz", type: "Pending Hours", status: "warning" },
+    { student: "Maria Santos", type: "Overdue Report", status: "danger" },
+    { student: "Alex Tan", type: "New Submission", status: "info" },
   ];
 
   return (
     <div className="section">
-      <h3>Weekly Progress Tracker</h3>
+      <h3>Alerts & Notifications</h3>
       <div className="grid">
-        {data.map((s, i) => (
-          <div key={i} className="progress-card glass">
-            <p>{s.name}</p>
-            <div className="progress-bar">
-              <div className="progress-fill" style={{ width: `${s.progress}%` }} />
-            </div>
-            <Badge type={s.progress > 60 ? "complete" : "pending"} text={`${s.progress}%`} />
+        {alertsData.map((a, i) => (
+          <div key={i} className={`alert-card glass ${a.status}`}>
+            <p><strong>{a.student}</strong></p>
+            <p>{a.type}</p>
+            <Badge type={a.status} text={a.type} />
           </div>
         ))}
       </div>
