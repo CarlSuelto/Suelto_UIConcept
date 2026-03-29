@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import "./App.css";
 
-type Page = "Dashboard" | "Students" | "Logs" | "Reports" | "Alerts";
+type Page = "dashboard" | "students" | "logs" | "reports";
 
 const App: React.FC = () => {
-  const [page, setPage] = useState<Page>("Dashboard");
+  const [page, setPage] = useState<Page>("dashboard");
   const [collapsed, setCollapsed] = useState(false);
 
   return (
@@ -22,11 +22,10 @@ const App: React.FC = () => {
         </div>
 
         <nav className="nav">
-          <NavItem label="Dashboard" icon="📊" active={page==="Dashboard"} onClick={()=>setPage("Dashboard")} collapsed={collapsed}/>
-          <NavItem label="Students" icon="👨‍🎓" active={page==="Students"} onClick={()=>setPage("Students")} collapsed={collapsed}/>
-          <NavItem label="Logs" icon="📝" active={page==="Logs"} onClick={()=>setPage("Logs")} collapsed={collapsed}/>
-          <NavItem label="Reports" icon="📁" active={page==="Reports"} onClick={()=>setPage("Reports")} collapsed={collapsed}/>
-          <NavItem label="Alerts" icon="🚨" active={page==="Alerts"} onClick={()=>setPage("Alerts")} collapsed={collapsed}/>
+          <NavItem label="Dashboard" icon="📊" active={page==="dashboard"} onClick={()=>setPage("dashboard")} collapsed={collapsed}/>
+          <NavItem label="Students" icon="👨‍🎓" active={page==="students"} onClick={()=>setPage("students")} collapsed={collapsed}/>
+          <NavItem label="Logs" icon="📝" active={page==="logs"} onClick={()=>setPage("logs")} collapsed={collapsed}/>
+          <NavItem label="Reports" icon="📁" active={page==="reports"} onClick={()=>setPage("reports")} collapsed={collapsed}/>
         </nav>
       </aside>
 
@@ -38,11 +37,10 @@ const App: React.FC = () => {
         </header>
 
         <div className="page">
-          {page === "Dashboard" && <Dashboard />}
-          {page === "Students" && <Students />}
-          {page === "Logs" && <Logs />}
-          {page === "Reports" && <Reports />}
-          {page === "Alerts" && <Alerts />}
+          {page === "dashboard" && <Dashboard />}
+          {page === "students" && <Students />}
+          {page === "logs" && <Logs />}
+          {page === "reports" && <Reports />}
         </div>
       </main>
     </div>
@@ -107,30 +105,6 @@ const Reports = () => (
   </div>
 );
 
-/* NEW ALERTS PAGE */
-const Alerts = () => {
-  const alertsData = [
-    { student: "Juan Dela Cruz", type: "Pending Hours", status: "warning" },
-    { student: "Maria Santos", type: "Overdue Report", status: "danger" },
-    { student: "Alex Tan", type: "New Submission", status: "info" },
-  ];
-
-  return (
-    <div className="section">
-      <h3>Alerts & Notifications</h3>
-      <div className="grid">
-        {alertsData.map((a, i) => (
-          <div key={i} className={`alert-card glass ${a.status}`}>
-            <p><strong>{a.student}</strong></p>
-            <p>{a.type}</p>
-            <Badge type={a.status} text={a.type} />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
 /* COMPONENTS */
 const Card = ({ title, value }: any) => (
   <div className="card glass">
@@ -146,11 +120,16 @@ const Badge = ({ type, text }: any) => (
 const Table = ({ headers, rows }: any) => (
   <div className="table glass">
     <div className="row header-row">
-      {headers.map((h: string, i: number) => <span key={i}>{h}</span>)}
+      {headers.map((h: string, i: number) => (
+        <span key={i}>{h}</span>
+      ))}
     </div>
+
     {rows.map((r: any, i: number) => (
       <div className="row fade-in" key={i}>
-        {r.map((cell: any, j: number) => <span key={j}>{cell}</span>)}
+        {r.map((cell: any, j: number) => (
+          <span key={j}>{cell}</span>
+        ))}
       </div>
     ))}
   </div>
