@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./index.css";
+import "./App.css";
 
 type Page = "Dashboard" | "Students" | "Logs" | "Reports" | "Progress";
 
