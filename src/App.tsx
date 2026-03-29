@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./App.css";
 
-type Page = "Dashboard" | "Students" | "Logs" | "Reports";
+type Page = "Dashboard" | "Students" | "Logs" | "Reports" | "Timeline";
 
 const App: React.FC = () => {
   const [page, setPage] = useState<Page>("Dashboard");
@@ -21,6 +21,7 @@ const App: React.FC = () => {
           <NavItem label="Students" icon="👨‍🎓" active={page==="Students"} onClick={()=>setPage("Students")} collapsed={collapsed}/>
           <NavItem label="Logs" icon="📝" active={page==="Logs"} onClick={()=>setPage("Logs")} collapsed={collapsed}/>
           <NavItem label="Reports" icon="📁" active={page==="Reports"} onClick={()=>setPage("Reports")} collapsed={collapsed}/>
+          <NavItem label="Timeline" icon="⏱️" active={page==="Timeline"} onClick={()=>setPage("Timeline")} collapsed={collapsed}/>
         </nav>
       </aside>
 
@@ -36,6 +37,7 @@ const App: React.FC = () => {
           {page === "Students" && <Students />}
           {page === "Logs" && <Logs />}
           {page === "Reports" && <Reports />}
+          {page === "Timeline" && <Timeline />}
         </div>
       </main>
     </div>
@@ -98,6 +100,29 @@ const Reports = () => (
     <Card title="Pending Review" value="12" />
   </div>
 );
+
+/* NEW TIMELINE PAGE */
+const Timeline = () => {
+  const activities = [
+    { time: "2026-03-28 09:00", student: "Juan", action: "Submitted report" },
+    { time: "2026-03-28 10:30", student: "Maria", action: "Logged 4 hours" },
+    { time: "2026-03-28 11:15", student: "Alex", action: "Pending approval" },
+  ];
+
+  return (
+    <div className="section">
+      <h3>Student Activity Timeline</h3>
+      <div className="timeline">
+        {activities.map((a, i) => (
+          <div key={i} className="timeline-card glass fade-in">
+            <p className="time">{a.time}</p>
+            <p><strong>{a.student}</strong> — {a.action}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 /* COMPONENTS */
 const Card = ({ title, value }: any) => (
